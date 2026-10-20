@@ -91,7 +91,7 @@
         <button type="button" data-direction="right" aria-label="Move right" aria-pressed="false" disabled><span class="arrow" aria-hidden="true" style="--angle: 45deg"></span></button>
         <button type="button" data-direction="down" aria-label="Move down" aria-pressed="false" disabled><span class="arrow" aria-hidden="true" style="--angle: 135deg"></span></button>
       </div>
-      <p>003-A · provisional visuals<br><span id="rotate">Rotate for a wider arena.</span></p>
+      <p>003-B · provisional courtyard<br><span id="rotate">Rotate for a wider arena.</span></p>
     </aside>
     <div id="actions"><button id="attack" type="button" data-direction="attack" aria-label="Attack" aria-pressed="false" disabled>Attack</button><button id="dodge" type="button" data-direction="dodge" aria-label="Dodge" aria-pressed="false" disabled>Dodge</button></div>
   </main>
@@ -203,7 +203,7 @@
     new ResizeObserver(resizeCanvas).observe(document.getElementById('stage'));
     resizeCanvas();
 
-    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":184560,"index.wasm":37700666},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":204236,"index.wasm":37700666},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
     const engine = new Engine(config);
     function failure(error) {
       window.playtestControls.unbind();
