@@ -1,6 +1,6 @@
 {
   "engine": "4.6.3.stable.official.7d41c59c4",
-  "source_commit": "bac77c135b06ea5544d0336d805552ba51573a11",
+  "source_commit": "80d395d50fa359ff72a70f5e63cc02a6403c773b",
   "source_modified": false,
   "templates_sha256": "3fbe2c0e2dec9d537ab9ec97bcf8da91dcf23357fc51f67092dd068d839290a8",
   "preset": "Web Playtest",
@@ -13,7 +13,7 @@
     "index.html": "6061974ef7ffe4d3f983eeb6a25436c5ad1d4eb23b2c4eb35b92fd75cff6e985",
     "index.icon.png": "08808dd5397e9a502cb3624944151f87a9705b5b66b5c365c5ca4c6ab51525f5",
     "index.js": "e3f56ee40e6f84371053db06692cfac15e2c8659547b11c6b2dfa1996dabd981",
-    "index.pck": "1a49fbe5b636bd5d53b0175293f9f371f8b393893594c17b06c4baaf9f995b2d",
+    "index.pck": "9d0b4bc18b82c38ebdedaf7b628df6a592b75c26ae050aa9a867d1413e55d464",
     "index.png": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e",
     "index.wasm": "26b61ce95247012ab3dca3ff51e96d1cdbff44ee91a8c20a83e150afca83f1b6",
     "licenses/GODOT_COPYRIGHT.txt": "b3330849267d56ddd3d62a513817506606c2195034411fe05859f0140bff9d8a",
