@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#121820">
+  <link rel="icon" href="data:,">
+  <title>Zombie Rebuilder - Infrastructure Smoke</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; background: #121820; color: #edf5f3;
+      font: 16px/1.4 system-ui, sans-serif; overflow: hidden; overscroll-behavior: none; }
+    #app { height: 100%; height: 100dvh; display: flex; gap: 12px;
+      padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+        max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
+    #stage { position: relative; flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+    #canvas { display: block; width: 100%; height: 100%; outline: none; touch-action: none; }
+    #status { position: absolute; inset: 0; display: grid; place-content: center;
+      padding: 16px; background: #121820; text-align: center; white-space: pre-line; }
+    #status[hidden] { display: none; }
+    aside { flex: 0 0 208px; display: flex; flex-direction: column; justify-content: center;
+      align-items: center; gap: 12px; }
+    p { margin: 0; text-align: center; max-width: 24em; font-size: 14px; }
+    #pad { display: grid; grid-template: repeat(3, 64px) / repeat(3, 64px); gap: 8px;
+      touch-action: none; user-select: none; -webkit-user-select: none; }
+    #pad button { min-width: 64px; min-height: 64px; border: 2px solid #89ada4; border-radius: 12px;
+      background: #253e38; color: white; font: 28px system-ui; touch-action: none;
+      -webkit-touch-callout: none; }
+    #pad button[aria-pressed="true"] { background: #387866; }
+    #pad button:focus-visible { outline: 3px solid #f4c570; outline-offset: 2px; }
+    #pad button:disabled { opacity: .4; }
+    [data-direction="up"] { grid-area: 1 / 2; }
+    [data-direction="left"] { grid-area: 2 / 1; }
+    [data-direction="right"] { grid-area: 2 / 3; }
+    [data-direction="down"] { grid-area: 3 / 2; }
+    #rotate { display: none; }
+    @media (orientation: portrait) {
+      #app { flex-direction: column; }
+      aside { flex: 0 0 auto; }
+      #rotate { display: inline; }
+    }
+    @media (orientation: landscape) and (max-height: 420px) {
+      aside { flex-basis: 184px; gap: 8px; }
+      #pad { grid-template: repeat(3, 56px) / repeat(3, 56px); }
+      #pad button { min-width: 56px; min-height: 56px; }
+    }
+  </style>
+  <link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+
+</head>
+<body>
+  <main id="app">
+    <section id="stage" aria-label="Placeholder movement arena">
+      <canvas id="canvas" tabindex="0" aria-label="Game. Use WASD or arrow keys to move."></canvas>
+      <div id="status" role="status">Loading playtest…</div>
+    </section>
+    <aside aria-label="Movement controls">
+      <p>Move the teal square.<br>Hold a direction or use WASD / arrows.</p>
+      <div id="pad" role="group" aria-label="Directional pad">
+        <button type="button" data-direction="up" aria-label="Move up" aria-pressed="false" disabled>↑</button>
+        <button type="button" data-direction="left" aria-label="Move left" aria-pressed="false" disabled>←</button>
+        <button type="button" data-direction="right" aria-label="Move right" aria-pressed="false" disabled>→</button>
+        <button type="button" data-direction="down" aria-label="Move down" aria-pressed="false" disabled>↓</button>
+      </div>
+      <p>Technical playtest · placeholder art<br><span id="rotate">Rotate for a wider arena.</span></p>
+    </aside>
+  </main>
+  <noscript>JavaScript is required to run this playtest.</noscript>
+  <script src="index.js"></script>
+  <script>
+    'use strict';
+    const canvas = document.getElementById('canvas');
+    const status = document.getElementById('status');
+    const buttons = [...document.querySelectorAll('#pad button')];
+    const vectors = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+    const pointers = new Map();
+    let receiver = null;
+
+    function publish() {
+      let x = 0, y = 0;
+      const held = new Set(pointers.values());
+      for (const direction of held) {
+        if (!direction) continue;
+        x += vectors[direction][0]; y += vectors[direction][1];
+      }
+      for (const button of buttons) button.setAttribute('aria-pressed', String(held.has(button.dataset.direction)));
+      if (receiver) receiver(x, y);
+    }
+    function clearInput() { pointers.clear(); publish(); }
+    window.playtestControls = {
+      ready: false,
+      bind(callback) {
+        receiver = callback;
+        this.ready = true;
+        for (const button of buttons) button.disabled = false;
+        clearInput();
+      },
+      unbind() {
+        clearInput(); receiver = null; this.ready = false;
+        for (const button of buttons) button.disabled = true;
+      }
+    };
+    for (const button of buttons) {
+      button.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        canvas.focus({ preventScroll: true });
+        button.setPointerCapture(event.pointerId);
+        pointers.set(event.pointerId, button.dataset.direction);
+        publish();
+      });
+      button.addEventListener('pointermove', (event) => {
+        if (!pointers.has(event.pointerId)) return;
+        const target = document.elementFromPoint(event.clientX, event.clientY);
+        // Keep tracking the pointer outside the pad, but stop its movement.
+        pointers.set(event.pointerId, target?.closest('#pad button')?.dataset.direction || null);
+        publish();
+      });
+      for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+        button.addEventListener(type, (event) => { pointers.delete(event.pointerId); publish(); });
+      }
+      button.addEventListener('contextmenu', (event) => event.preventDefault());
+    }
+    for (const type of ['blur', 'pagehide', 'resize', 'orientationchange']) window.addEventListener(type, clearInput);
+    document.addEventListener('visibilitychange', clearInput);
+
+    function resizeCanvas() {
+      clearInput();
+      const stage = document.getElementById('stage');
+      canvas.width = Math.max(1, Math.floor(stage.clientWidth * (devicePixelRatio || 1)));
+      canvas.height = Math.max(1, Math.floor(stage.clientHeight * (devicePixelRatio || 1)));
+    }
+    new ResizeObserver(resizeCanvas).observe(document.getElementById('stage'));
+    resizeCanvas();
+
+    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":114376,"index.wasm":37700666},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    const engine = new Engine(config);
+    function failure(error) {
+      window.playtestControls.unbind();
+      status.hidden = false;
+      status.textContent = `Could not start playtest.\n${error.message || error}\nReload to retry.`;
+      console.error(error);
+    }
+    const missing = Engine.getMissingFeatures({ threads: false });
+    if (missing.length) {
+      failure(`This browser is missing: ${missing.join(', ')}. Try current Safari.`);
+    } else {
+      // Catch download rejection before Godot 4.6.3 init wraps the load promise.
+      Engine.load(config.executable, config.fileSizes[`${config.executable}.wasm`]).then(() => engine.startGame({
+        canvas,
+        onProgress(current, total) {
+          status.textContent = total > 0 ? `Loading playtest… ${Math.floor(current / total * 100)}%` : 'Loading playtest…';
+        },
+        onExit(code) { failure(`Game stopped (${code}).`); }
+      })).then(() => { status.hidden = true; }, failure);
+    }
+  </script>
+</body>
+</html>
+

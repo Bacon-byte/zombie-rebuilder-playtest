@@ -1,0 +1,38 @@
+{
+  "engine": "4.6.3.stable.official.7d41c59c4",
+  "source_commit": "915d9b2b1acf7803315b24417c836b1d24c6e604",
+  "source_modified": false,
+  "templates_sha256": "3fbe2c0e2dec9d537ab9ec97bcf8da91dcf23357fc51f67092dd068d839290a8",
+  "preset": "Web Playtest",
+  "threads": false,
+  "files": {
+    "PLAYTEST.txt": "1b9e5d77038e392eb94c13452347d9080647eb3301bccb23dcadc3698c0233bb",
+    "index.apple-touch-icon.png": "9b374ecbc8558f480421e646f38aaa8a69d5b1d65ff7b48d0735da214c46773a",
+    "index.audio.position.worklet.js": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+    "index.audio.worklet.js": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+    "index.html": "e8386f928c02073525fcd6bcd1a2f4d44eabbae5cc5e6501dd7713a799def56a",
+    "index.icon.png": "08808dd5397e9a502cb3624944151f87a9705b5b66b5c365c5ca4c6ab51525f5",
+    "index.js": "e3f56ee40e6f84371053db06692cfac15e2c8659547b11c6b2dfa1996dabd981",
+    "index.pck": "92c4c536d7727aff18cb1fd960cdc8914aae460aaf912b4a5b6d121ba899e647",
+    "index.png": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e",
+    "index.wasm": "26b61ce95247012ab3dca3ff51e96d1cdbff44ee91a8c20a83e150afca83f1b6",
+    "licenses/GODOT_COPYRIGHT.txt": "b3330849267d56ddd3d62a513817506606c2195034411fe05859f0140bff9d8a",
+    "licenses/GODOT_LICENSE.txt": "b0435e3b3e4e55238f05f4b306f30524a1b2e20147810d436eaa554fa6855c80",
+    "serve_web_https.py": "7683d3005600b0249b0a4bb40ef2325dde1b54b9a8642568e6231e61f394d972"
+  },
+  "file_sizes_bytes": {
+    "PLAYTEST.txt": 2669,
+    "index.apple-touch-icon.png": 11952,
+    "index.audio.position.worklet.js": 2973,
+    "index.audio.worklet.js": 7298,
+    "index.html": 7946,
+    "index.icon.png": 5702,
+    "index.js": 315759,
+    "index.pck": 114376,
+    "index.png": 21443,
+    "index.wasm": 37700666,
+    "licenses/GODOT_COPYRIGHT.txt": 99790,
+    "licenses/GODOT_LICENSE.txt": 1149,
+    "serve_web_https.py": 5713
+  }
+}
