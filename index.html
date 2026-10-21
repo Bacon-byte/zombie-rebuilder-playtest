@@ -70,7 +70,7 @@
         <select id="mode" aria-label="Encounter mode" disabled><option value="0">Training</option><option value="1" selected>Encounter</option><option value="2">Crowd</option></select>
         <button id="reset" type="button" disabled>Reset</button>
         <button id="debug" type="button" aria-pressed="false" disabled>Debug</button>
-        <select id="art-style" aria-label="Provisional art treatment" disabled><option value="0">A · outlined</option><option value="1" selected>B · balanced</option><option value="2">C · flat</option></select>
+        <select id="art-style" aria-label="Provisional art treatment" disabled><option value="0">A · outlined</option><option value="1" selected>B · balanced</option><option value="2">C · flat</option><option value="3">003-C actor</option></select>
         <select id="quality" aria-label="Visual quality" disabled><option value="0">Standard FX</option><option value="1">Reduced FX</option></select>
         <span id="encounter-status" role="status">HP 100 · Living 4</span>
       </div>
@@ -92,7 +92,7 @@
         <button type="button" data-direction="right" aria-label="Move right" aria-pressed="false" disabled><span class="arrow" aria-hidden="true" style="--angle: 45deg"></span></button>
         <button type="button" data-direction="down" aria-label="Move down" aria-pressed="false" disabled><span class="arrow" aria-hidden="true" style="--angle: 135deg"></span></button>
       </div>
-      <p>003-C · courtyard study<br><span id="rotate">Rotate for a wider arena.</span></p>
+      <p>003-D · survivor study<br><span id="rotate">Rotate for a wider arena.</span></p>
     </aside>
     <div id="actions"><button id="attack" type="button" data-direction="attack" aria-label="Attack" aria-pressed="false" disabled>Attack</button><button id="dodge" type="button" data-direction="dodge" aria-label="Dodge" aria-pressed="false" disabled>Dodge</button></div>
   </main>
@@ -151,6 +151,18 @@
       if (name === 'debug') event.target.setAttribute('aria-pressed', String(event.target.getAttribute('aria-pressed') !== 'true'));
       if (encounterReceiver) encounterReceiver(name);
     });
+    // Explicit capture-only fixture; ordinary play never binds this adapter.
+    if (new URLSearchParams(location.search).has('survivor-evidence')) {
+      window.playtestSurvivorEvidence = {
+        ready: false, result: null, view: null, receiver: null,
+        bind(callback) { this.receiver = callback; this.ready = true; },
+        unbind() { this.receiver = null; this.ready = false; },
+        request(scenario, direction) { this.result = null; this.receiver(scenario, direction); },
+        status(json) { this.result = JSON.parse(json); },
+        look(sprite) { this.view = null; this.receiver("appearance", sprite ? 1 : 0); },
+        look_status(json) { this.view = JSON.parse(json); }
+      };
+    }
     let presentationReceiver = null;
     const artStyle = document.querySelector('#art-style');
     const quality = document.querySelector('#quality');
@@ -208,7 +220,7 @@
     new ResizeObserver(resizeCanvas).observe(document.getElementById('stage'));
     resizeCanvas();
 
-    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":240352,"index.wasm":37700666},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+    const config = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":353952,"index.wasm":37700666},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
     const engine = new Engine(config);
     function failure(error) {
       window.playtestControls.unbind();
